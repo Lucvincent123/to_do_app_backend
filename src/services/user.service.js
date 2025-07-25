@@ -13,6 +13,17 @@ class UserService {
             throw new Error(`Error retrieving users: ${error.message}`);
         }               
     }
+
+    async getUserByEmail(email) {
+        // Logic to retrieve a user by email
+        try {
+            const user = await userModel.findOne({ email }); // Include password for comparison
+            return user;
+        } catch (error) {
+            throw new Error(`Error retrieving user by email: ${error.message}`);
+        }
+    }
+
     async createUser(userData) {
         // Logic to create a new user in the database
         try {

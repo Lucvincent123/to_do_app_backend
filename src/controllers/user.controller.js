@@ -15,7 +15,9 @@ class UserController {
     async createUser(req, res) {
         try {
             const userData = req.body;
-
+            if (UserService.getUserByEmail(userData.email)) {
+                return res.status(400).json({ message: 'Email already used before' });
+            }
             const newUser = await UserService.createUser(userData);
             res.status(201).json(newUser);
         } catch (error) {

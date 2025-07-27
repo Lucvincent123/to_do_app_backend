@@ -46,7 +46,7 @@ class UserService {
             if (user.password !== password) { // Replace with proper hashing comparison in production
                 throw new Error('Invalid password');
             }
-            return { message: 'Login successful', username: user.username };
+            return { message: 'Login successful', userId: user._id };
         } catch (error) {
             throw new Error(error.message);
         }

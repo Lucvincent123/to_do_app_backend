@@ -14,6 +14,16 @@ class UserService {
         }               
     }
 
+    async getUserById(userId) {
+        // Logic to retrieve a user by ID
+        try {
+            const user = await userModel.findById(userId); // Exclude password from results
+            return user;
+        } catch (error) {
+            throw new Error(`Error retrieving user by ID: ${error.message}`);
+        }
+    }
+
     async getUserByEmail(email) {
         // Logic to retrieve a user by email
         try {

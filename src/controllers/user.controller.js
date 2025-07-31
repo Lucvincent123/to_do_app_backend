@@ -1,5 +1,7 @@
 'use strict';
 
+const jwt = require('jsonwebtoken');
+
 const { UserService } = require('../services');
 
 
@@ -35,13 +37,30 @@ class UserController {
             if (loginResponse instanceof Error) {
                 return res.status(401).json({ message: loginResponse.message });
             }
-
-            res.status(200).json(loginResponse);
+            // Generate JWT token
+            const token = jwt.sign({ userId: loginResponse.userId }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
+            res.status(200).json({ message: 'Login successful', token, userId: loginResponse.userId });
         } catch (error) {
             console.log(error.message);
             res.status(500).json({ message: error.message });
         }
     }
+
+
+    async getUserById(req, res) {
+        try {
+            const userId = req.params.id;
+            const user = await UserService.getUserById(userId);
+            if (!user) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+            res.status(200).json(user);
+        } catch (error) {
+            res.status(500).json({ message: error.message });
+        }
+    }
 }
+
+
 
 module.exports.UserController = UserController;

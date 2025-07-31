@@ -1,6 +1,8 @@
 "use strict";
 
 
+const jwt = require('jsonwebtoken');
+
 // Example middleware: logs request method and URL
 function logger(req, res, next) {
     console.log(`${req.method} ${req.url}`);
@@ -15,7 +17,24 @@ function cors(req, res, next) {
     next();
 }
 
+function authorization(req, res, next) {
+    const token = req.headers['authorization'].split(' ')[1]; // Assuming token is sent as "Bearer <token>"
+    if (!token) {
+        return res.status(401).json({ message: 'No token provided' });
+    }
+    // Verify token logic here (e.g., using JWT)
+    // For now, just passing the request to the next middleware
+    jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decoded) => {
+        if (err) {
+            return res.status(401).json({ message: 'Failed to authenticate token' });
+        }
+        req.userId = decoded.userId; // Attach user ID to request object
+    });
+    next();
+}
+
 module.exports = {
     logger,
     cors,
+    authorization,
 };

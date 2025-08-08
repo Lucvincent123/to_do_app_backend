@@ -23,7 +23,8 @@ class UserController {
     async createUser(req, res) {
         try {
             const userData = req.body;
-            if (UserService.getUserByEmail(userData.email)) {
+            const emailAlreadyUsed = await UserService.getUserByEmail(userData.email);
+            if (emailAlreadyUsed) {
                 return res.status(400).json({ success: false, message: 'Email already used before' });
             }
             const newUser = await UserService.createUser(userData);

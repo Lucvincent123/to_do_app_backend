@@ -1,9 +1,11 @@
+// This file import all service and export
 'use strict';
 
-const userService = require('./user.service');
-const taskService = require('./task.service');
+const UserService = require('./user.service');
+const TaskService = require('./task.service');
 
+// Export
 module.exports = {
-    UserService: new userService.UserService(),
-    TaskService: new taskService.TaskService()
+    UserService: new UserService(),
+    TaskService: new TaskService(),
 };

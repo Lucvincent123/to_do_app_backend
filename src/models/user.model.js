@@ -1,8 +1,11 @@
+// This file sets up user model
 'use strict';
 
-const mongoose = require("mongoose");
+// Import external modules
+const mongoose = require('mongoose');
 
-const userSchema = new mongoose.Schema({
+// Construct user schema
+const UserSchema = new mongoose.Schema({
     username: {
         type: String,
         required: true,
@@ -24,6 +27,7 @@ const userSchema = new mongoose.Schema({
         minlength: 6,
         select: false, // Exclude password from queries by default
     },
-})
+});
 
-module.exports = mongoose.model("User", userSchema); // 'users' is the collection name
+// Export
+module.exports = mongoose.model('User', UserSchema, 'users'); // 'users' is the collection name

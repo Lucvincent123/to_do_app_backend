@@ -1,36 +1,38 @@
+// This file provides all services of user model
 'use strict';
 
+// Import user model
 const userModel = require('../models/user.model');
 
-
+// Construct user service
 class UserService {
     async getAllUsers() {
         // Logic to retrieve all users from the database
         try {
-            const users = await userModel.find(); // Exclude password from results
+            const users = await userModel.find(); // Exclude password from results by default
             return users;
         } catch (error) {
             throw new Error(`Error retrieving users: ${error.message}`);
-        }               
+        }
     }
 
     async getUserById(userId) {
         // Logic to retrieve a user by ID
         try {
-            const user = await userModel.findById(userId); // Exclude password from results
+            const user = await userModel.findById(userId); // Exclude password from results by default
             return user;
         } catch (error) {
-            throw new Error(`Error retrieving user by ID: ${error.message}`);
+            throw new Error(`Error retrieving user ${userId}: ${error.message}`);
         }
     }
 
     async getUserByEmail(email) {
         // Logic to retrieve a user by email
         try {
-            const user = await userModel.findOne({ email }); // Include password for comparison
+            const user = await userModel.findOne({ email }).select('+password'); // Include password for comparison
             return user;
         } catch (error) {
-            throw new Error(`Error retrieving user by email: ${error.message}`);
+            throw new Error(`Error retrieving user by email ${email}: ${error.message}`);
         }
     }
 
@@ -44,23 +46,7 @@ class UserService {
             throw new Error(`Error creating user: ${error.message}`);
         }
     }
-
-    async login(username, password) {
-        // Logic to handle user login
-        try {
-            const user = await userModel.findOne({ username }).select('+password'); // Include password for comparison
-            if (!user) {
-                throw new Error('User not found');
-            }   
-            // Here you would typically compare the password with a hashed version
-            if (user.password !== password) { // Replace with proper hashing comparison in production
-                throw new Error('Invalid password');
-            }
-            return { message: 'Login successful', userId: user._id };
-        } catch (error) {
-            throw new Error(error.message);
-        }
-    }        
 }
 
-module.exports.UserService = UserService;
+// Export
+module.exports = UserService;

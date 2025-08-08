@@ -1,6 +1,7 @@
-"use strict";
+// This file sets up all middlewares
+'use strict';
 
-
+// Import external module
 const jwt = require('jsonwebtoken');
 
 // Example middleware: logs request method and URL
@@ -26,13 +27,14 @@ function authorization(req, res, next) {
     // For now, just passing the request to the next middleware
     jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decoded) => {
         if (err) {
-            return res.status(401).json({ message: 'Failed to authenticate token' });
+            return res.status(401).json({ success: false, message: `Failed to authenticate token: ${err}` });
         }
         req.userId = decoded.userId; // Attach user ID to request object
     });
     next();
 }
 
+// Export
 module.exports = {
     logger,
     cors,

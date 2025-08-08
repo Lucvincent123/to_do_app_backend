@@ -1,8 +1,10 @@
-"use strict";
 // This file sets up the database connection using Mongoose.
-const mongoose = require("mongoose");
- 
+'use strict';
 
+// Import external modules
+const mongoose = require('mongoose');
+
+// Function connecting database with the given URI
 const connectDB = async (MONGO_URI) => {
     try {
         const conn = await mongoose.connect(MONGO_URI);
@@ -11,6 +13,7 @@ const connectDB = async (MONGO_URI) => {
         console.error(`Error: ${error.message}`);
         process.exit(1);
     }
-}       
+};
 
+// Export
 module.exports = connectDB;

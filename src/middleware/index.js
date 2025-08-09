@@ -30,8 +30,8 @@ function authorization(req, res, next) {
             return res.status(401).json({ success: false, message: `Failed to authenticate token: ${err}` });
         }
         req.userId = decoded.userId; // Attach user ID to request object
+        next();
     });
-    next();
 }
 
 // Export

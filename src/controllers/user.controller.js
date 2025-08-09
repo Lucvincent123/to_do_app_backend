@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 
 // Import services
 const { UserService } = require('../services');
+const sendEmail = require('../services/mail.service');
 
 // Construct controller
 class UserController {
@@ -76,6 +77,42 @@ class UserController {
                 return res.status(404).json({ success: false, message: 'User not found' });
             }
             res.status(200).json({ success: true, message: 'User info obtained', data: user });
+        } catch (error) {
+            res.status(500).json({ success: false, message: error.message });
+        }
+    }
+
+    //POST /api/user/reset-password
+    async sendResetMail(req, res) {
+        const { email } = req.body;
+        try {
+            const user = await UserService.getUserByEmail(email);
+            const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET_KEY, {
+                expiresIn: '2m',
+            });
+            const url = `${process.env.FRONTEND_URI}/?token=${token}`;
+            const message = `Click to reset\n${url}`;
+            await sendEmail({
+                email,
+                message,
+                subject: 'RESET PASSWORD',
+                html: `
+                <a href=${url}>Click here to reset password!</a>
+                `,
+            });
+            res.status(200).json({ success: true, message: 'Email sent' });
+        } catch (error) {
+            res.status(500).json({ success: false, message: error.message });
+        }
+    }
+
+    // PATCH /api/user/reset-password
+    async setNewPassword(req, res) {
+        try {
+            const userId = req.userId;
+            const password = req.body.password;
+            const user = await UserService.updateUserById(userId, { password });
+            res.status(200).json({ success: true, message: 'Successfully change password', data: user });
         } catch (error) {
             res.status(500).json({ success: false, message: error.message });
         }

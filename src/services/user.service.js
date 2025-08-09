@@ -46,6 +46,15 @@ class UserService {
             throw new Error(`Error creating user: ${error.message}`);
         }
     }
+
+    async updateUserById(userId, data) {
+        try {
+            const previousUser = await userModel.findByIdAndUpdate(userId, data);
+            return previousUser;
+        } catch (error) {
+            throw new Error(`Error updating user with id: ${userId}`);
+        }
+    }
 }
 
 // Export

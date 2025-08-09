@@ -16,6 +16,8 @@ router.get('/', UserController.getAllUsers);
 router.post('/', UserController.createUser);
 router.post('/login', UserController.login);
 router.get('/info', authorization, UserController.getUserInfo);
+router.post('/reset-password', UserController.sendResetMail);
+router.patch('/reset-password', authorization, UserController.setNewPassword);
 
 // Export
 module.exports = router;
